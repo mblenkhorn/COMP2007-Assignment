@@ -4,32 +4,61 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public CharacterController controller;
+    public float moveSpeed; //determines how fast the player moves
+    public Rigidbody rb;
+    public float jumpHeight;
 
-    
+    public Transform groundCheck;
+    public float groundDistance = 0.4f;
+    public LayerMask whatIsGround;
+    public bool isGrounded;
 
-    public float moveSpeed = 6f;
+    Vector3 velocity;
 
-    public float turnSmoothTime = 0.1f;
-    float turnSmoothVelocity;
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-
-        float vertical = Input.GetAxisRaw("Vertical");
-
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
-        if(direction.magnitude >-0.1f)
-        {
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-
-            controller.Move(direction * moveSpeed * Time.deltaTime);
-        }
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, whatIsGround);
     }
+
+
+
+    private void Update()
+    {
+        Move(); //runs this function
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+
+        if(isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+        }
+
+    }
+
+   
+
+
+    public void Move()
+    {
+        float x = Input.GetAxis("Horizontal"); //gets the horizontal inputs (left and right)
+        float z = Input.GetAxis("Vertical"); //gets the vertical inputs (up and down)
+
+        Vector3 movement = new Vector3(x, 0f, z).normalized * moveSpeed * Time.deltaTime; //allows the Player to move with the set speed and make it run frame independent
+        transform.Translate(movement, Space.Self); //allows the Player to move in that direction
+    }
+
+    public void Jump()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, jumpHeight, rb.velocity.z);
+    }
+
+
+
+
+
+
 }
