@@ -20,7 +20,7 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        CameraControl();
+        CameraControl(); //run this function
     }
 
 

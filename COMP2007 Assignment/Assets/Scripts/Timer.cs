@@ -5,32 +5,38 @@ using UnityEngine.UI;
 
 public class Timer : MonoBehaviour
 {
-    public float startingTime = 100.0f;
+    public float startingTime = 100.0f; //this is the starting time 
 
-    public Slider eggTimer;
+    public Slider eggTimer; //a reference to the slider
 
-    public GameObject endPanel;
+    public GameObject endPanel; //a reference to the endPanel
+
+    public static bool isStopped; //checks whether time is stopped or not
 
     private void Start()
-    {
-        eggTimer = GetComponent<Slider>();
+    { 
+        eggTimer = GetComponent<Slider>(); //gathers the slider component
     }
 
     private void Update()
     {
-        Countdown();
+        Countdown(); //runs this function
     }
 
     public void Countdown()
     {
-        startingTime -= Time.deltaTime;
-        eggTimer.value = startingTime;
-
-        if(startingTime <= 0)
+        if (!isStopped) //if time hasn't stopped
         {
-            startingTime = 0;
-            endPanel.SetActive(true);
-            Time.timeScale = 0f;
+            startingTime -= Time.deltaTime; //deplete the startingtime (frame independent)
+            eggTimer.value = startingTime; //assign startingtime to the eggtime.value
+        }
+       
+
+        if(startingTime <= 0) //if less than zero
+        {
+            startingTime = 0; //set the time to zero
+            isStopped = true; //set the isStopped to true
+            endPanel.SetActive(true); //enable the endpanel
         }
     }
 

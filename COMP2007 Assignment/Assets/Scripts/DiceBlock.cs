@@ -5,46 +5,30 @@ using UnityEngine.UI;
 
 public class DiceBlock : MonoBehaviour
 {
-    public float rotateSpeed;
+    public float rotateSpeed; //how fast the object will rotatw
 
-    public int score;
+    public int score = 0; //score of the diceblock
 
-    public int maxBlocks = 5;
+    public int maxBlocks = 5; //how much of each diceblock variant is in the area
 
 
-    public Text scoreText;
+    public ScoreManager manager; //a reference to the scoremanager
+
 
     // Start is called before the first frame update
-    void Start()
-    {
-        score = 0;
-        scoreText.text = score.ToString();
-    }
+    
 
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime);
+        transform.Rotate(Vector3.up * rotateSpeed * Time.deltaTime); //rotates the object by the movespeed (frame-independent)
     }
 
     
-    public void Collect()
-    {
-        AddScore(1);
-        gameObject.SetActive(false);
-    }
-
-    
-
-    public void AddScore(int pointsToAdd)
-    {
-        score += pointsToAdd;
-        Debug.Log(score);
-        scoreText.text = score.ToString();
-    }
-
+  
     private void OnTriggerEnter(Collider other)
     {
-        Collect();
+        manager.AddScore(1); //calls the AddScore function with 1 passed in as an argument
+        gameObject.SetActive(false); //disables visibility of the object 
     }
 }
